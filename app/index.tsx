@@ -1,4 +1,5 @@
 import { LinearGradient } from "expo-linear-gradient";
+import { useRouter } from "expo-router";
 import { Image, StatusBar, Text, TouchableOpacity, View } from "react-native";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import {
@@ -7,7 +8,9 @@ import {
 } from "react-native-responsive-screen";
 import "../global.css";
 
-export default function App() {
+export default function Index() {
+  const router = useRouter();
+
   return (
     <View className="flex flex-1 justify-end">
       {/* <Text className="color-slate-900">our first screen</Text> */}
@@ -45,6 +48,7 @@ export default function App() {
         </Animated.View>
         <Animated.View entering={FadeInDown.delay(200).springify()}>
           <TouchableOpacity
+            onPress={() => router.navigate("/home")}
             style={{ height: hp(7), width: wp(80) }}
             className="bg-rose-500 flex items-center justify-center mx-auto rounded-full border-[1px] border-neutral-200"
           >
