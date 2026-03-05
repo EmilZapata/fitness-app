@@ -1,3 +1,4 @@
+import BodyParts from "@components/body-parts";
 import ImageSlider from "@components/image-slider";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import React from "react";
@@ -43,6 +44,11 @@ export default function Home() {
       {/* Image slider */}
       <View>
         <ImageSlider />
+      </View>
+
+      {/* Body parts list */}
+      <View className="flex-1">
+        <BodyParts />
       </View>
     </SafeAreaView>
   );
