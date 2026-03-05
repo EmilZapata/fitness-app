@@ -17,6 +17,12 @@ export default function _layout() {
             presentation: "fullScreenModal",
           }}
         />
+        <Stack.Screen
+          name="exercise-details"
+          options={{
+            presentation: "modal",
+          }}
+        />
       </Stack>
     </QueryClientProvider>
   );
