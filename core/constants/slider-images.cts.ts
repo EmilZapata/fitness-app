@@ -1,7 +1,7 @@
 export const SLIDER_IMAGES = [
-  require("@assets/images/slide1.png"),
-  require("@assets/images/slide2.png"),
-  require("@assets/images/slide3.png"),
-  require("@assets/images/slide4.png"),
-  require("@assets/images/slide5.png"),
+  require("@assets/images/slide1.webp"),
+  require("@assets/images/slide2.webp"),
+  require("@assets/images/slide3.webp"),
+  require("@assets/images/slide4.webp"),
+  require("@assets/images/slide5.webp"),
 ];
