@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-TrackGym is a cross-platform fitness tracking app built with Expo (React Native). It targets iOS, Android, and web from a single codebase.
+TrackGym is a cross-platform fitness tracking app built with Expo (React Native). It targets iOS, Android, and web from a single codebase. The app allows users to browse exercises by body part with infinite scroll pagination.
 
 ## Commands
 
@@ -18,38 +18,73 @@ TrackGym is a cross-platform fitness tracking app built with Expo (React Native)
 
 ## Tech Stack
 
-- **React 19** / **React Native 0.84** / **Expo 55** (managed workflow)
+- **React 19** / **React Native 0.83** / **Expo 55** (managed workflow)
 - **Expo Router** - file-based routing under `app/`
 - **TypeScript** - strict mode enabled
+- **TanStack React Query** - server state management with `useInfiniteQuery` for pagination
+- **Axios** - HTTP client with centralized instance
+- **NativeWind** - Tailwind CSS for React Native styling
 - **Jest + jest-expo** - testing
-- **React Navigation** - underlying navigation with ThemeProvider
 
 ## Architecture
 
 ### Routing (Expo Router)
 
-Routes are defined by the file structure in `app/`. Key conventions:
-- `app/_layout.tsx` - Root layout: loads fonts, sets up ThemeProvider and Stack navigator
-- `app/(tabs)/` - Parenthesized directory creates a tab group (does not affect URL path)
-- `app/(tabs)/_layout.tsx` - Tab navigator configuration
-- `app/[...missing].tsx` - Catch-all 404 screen
-- `app/modal.tsx` - Modal presentation screen
-- Initial route is `(tabs)` (configured via `unstable_settings`)
+Routes are defined by the file structure in `app/`:
+- `app/_layout.tsx` - Root layout: wraps app with `QueryClientProvider` + `Stack` navigator
+- `app/index.tsx` - Welcome/landing screen
+- `app/home.tsx` - Home screen with image slider carousel and body parts grid
+- `app/exercises.tsx` - Exercise list by body part with infinite scroll (fullScreenModal)
+- `app/exercise-details.tsx` - Exercise detail view (modal)
 
-### Theme System
+Navigation flow: `index → home → exercises → exercise-details`
 
-Light/dark mode is handled through a custom system:
-- `constants/Colors.ts` - Defines color tokens for both themes (text, background, tint, tabIcon*)
-- `components/Themed.tsx` - Exports theme-aware `<Text>` and `<View>` wrappers plus `useThemeColor()` hook
-- Use the themed components from `components/Themed.tsx` instead of raw React Native `Text`/`View` for automatic dark mode support
-- Color scheme is detected from the system via `useColorScheme()`, defaulting to light
+### HTTP Layer (Axios)
+
+- `core/axios/index.ts` - Centralized Axios instance with RapidAPI auth headers
+- `apiCall<T, R>()` - Generic function that standardizes all API responses into `IRequestResponse<R>` shape (response, error, isCanceled, isError, message)
+- API endpoints live in `core/api/` organized by domain (e.g., `core/api/rapid/body-parts.api.ts`)
+
+### Server State (TanStack React Query)
+
+- `QueryClient` is created and provided in `app/_layout.tsx`
+- API hooks live in `core/hooks/api/` mirroring the API structure
+- Uses `useInfiniteQuery` for paginated endpoints with offset-based pagination
+- The `select` option flattens pages into a single array for consumers
+- `getNextPageParam` returns `undefined` when last page has fewer items than the limit
+
+### Passing Data Between Screens
+
+Expo Router params only support `string | string[]`. For complex objects, serialize with `JSON.stringify()` and parse with `JSON.parse()` on the receiving screen.
+
+### Path Aliases
+
+Configured in `tsconfig.json` and `babel.config.js`:
+- `@components/*` → `components/*`
+- `@core/*` → `core/*`
+- `@modules/*` → `modules/*`
+- `@assets/*` → `assets/*`
 
 ### Component Conventions
 
 - Components use `.tsx` extension, utilities/constants use `.ts`
-- Styling uses React Native `StyleSheet.create()` (no external CSS-in-JS)
-- Tests live in `components/__tests__/`
+- Styling uses NativeWind (`className`) + inline `style` for dynamic responsive values
+- Responsive sizing uses `hp()`/`wp()` utilities from `core/utils/percentage-screen.ts`
+- Skeleton loading components use React Native `Animated` for pulse animations
 - Entry point is `expo-router/entry` (configured in package.json `main` field)
+
+### Environment Variables
+
+All env vars use `EXPO_PUBLIC_` prefix. Defined in `.env` and re-exported from `core/constants/rapid-api.cts.ts`:
+- `EXPO_PUBLIC_RAPID_API_KEY` - RapidAPI authentication key
+- `EXPO_PUBLIC_RAPID_BASE_URL` - API base URL
+- `EXPO_PUBLIC_RAPID_API_HOST` - RapidAPI host header
+
+## Documentation
+
+Full documentation available in `docs/` directory in both English (`docs/en/`) and Spanish (`docs/es/`):
+- Architecture details: `docs/{en,es}/architecture.md`
+- Android APK build guide: `docs/{en,es}/android-build.md`
 
 ## Commit Conventions
 
