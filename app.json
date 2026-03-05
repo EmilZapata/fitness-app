@@ -22,7 +22,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.helmut95.fitnessapp"
     },
     "web": {
       "bundler": "metro",
@@ -34,6 +35,12 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "316aff72-38ba-4f96-a5b7-5dcbb565e2e1"
+      }
     }
   }
 }
