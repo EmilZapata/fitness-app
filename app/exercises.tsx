@@ -1,21 +1,29 @@
+import ExerciseCardSkeleton from "@components/exercise-card-skeleton";
+import ExerciseList from "@components/exercise-list";
 import { useApiBodyPart } from "@core/hooks/api/rapid/body-part.hook";
 import { hp, wp } from "@core/utils/percentage-screen";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect } from "react";
-import { Image, ScrollView, StatusBar, TouchableOpacity } from "react-native";
+import { Image, StatusBar, Text, TouchableOpacity, View } from "react-native";
+import { ScrollView } from "react-native-virtualized-view";
 
 export default function Exercises() {
   const router = useRouter();
   const item = useLocalSearchParams<{ name: string; image: any }>();
-
-  const { data, isLoading } = useApiBodyPart(item.name as string);
+  const hasParams = !!item.name;
+  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useApiBodyPart(hasParams ? item.name : "");
 
   useEffect(() => {
-    if (item.name && !isLoading && !data) {
+    if (!hasParams) {
+      handleGoBack();
+      return;
+    }
+    if (!isLoading && !data) {
       handleGoBack();
     }
-  }, [item.name, isLoading, data]);
+  }, [hasParams, isLoading, data]);
 
   const handleGoBack = () => {
     router.canGoBack() ? router.back() : router.push("/");
@@ -36,6 +44,31 @@ export default function Exercises() {
       >
         <Ionicons name="chevron-back-outline" size={hp(4)} color="white" />
       </TouchableOpacity>
+
+      {/* Exercises */}
+      <View className="mx-4 space-y-3 mt-2">
+        <Text
+          style={{ fontSize: hp(3) }}
+          className="font-semibold text-neutral-700"
+        >
+          {item?.name?.charAt(0).toUpperCase() + item?.name?.slice(1)} exercises
+        </Text>
+        <View className="mb-10">
+          {isLoading ? (
+            <ExerciseCardSkeleton />
+          ) : (
+            <ExerciseList
+              data={data ?? []}
+              onEndReached={() => {
+                if (hasNextPage && !isFetchingNextPage) {
+                  fetchNextPage();
+                }
+              }}
+              isFetchingNextPage={isFetchingNextPage}
+            />
+          )}
+        </View>
+      </View>
     </ScrollView>
   );
 }
