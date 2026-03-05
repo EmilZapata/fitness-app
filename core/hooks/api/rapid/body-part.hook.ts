@@ -1,12 +1,23 @@
-import { getExercisesByBodyPart } from "@core/api/rapid/body-parts.api";
-import { useQuery } from "@tanstack/react-query";
+import {
+  EXERCISES_PAGE_LIMIT,
+  getExercisesByBodyPart,
+} from "@core/api/rapid/body-parts.api";
+import { useInfiniteQuery } from "@tanstack/react-query";
 
 export const useApiBodyPart = (bodyPart: string) => {
-  return useQuery({
+  return useInfiniteQuery({
     queryKey: ["exercises", bodyPart],
-    queryFn: () => getExercisesByBodyPart(bodyPart),
+    queryFn: ({ pageParam = 0 }) => getExercisesByBodyPart(bodyPart, pageParam),
+    initialPageParam: 0,
+    getNextPageParam: (lastPage, allPages) => {
+      const exercises = lastPage.response;
+      if (!exercises || exercises.length < EXERCISES_PAGE_LIMIT) {
+        return undefined;
+      }
+      return allPages.length * EXERCISES_PAGE_LIMIT;
+    },
     enabled: !!bodyPart,
     staleTime: 1000 * 60 * 60, // 1 hour
-    select: (data) => data.response, // Puedes transformar los datos aquí si es necesario
+    select: (data) => data.pages.flatMap((page) => page.response ?? []),
   });
 };
