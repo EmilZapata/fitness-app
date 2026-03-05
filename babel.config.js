@@ -11,8 +11,9 @@ module.exports = function (api) {
         {
           alias: {
             "@components": "./components",
-            "@constants": "./constants",
-
+            "@core": "./core",
+            "@modules": "./modules",
+            "@assets": "./assets",
           },
         },
       ],

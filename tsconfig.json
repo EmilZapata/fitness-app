@@ -5,8 +5,9 @@
     "baseUrl": ".",
     "paths": {
       "@components/*": ["components/*"],
-      "@constants/*": ["constants/*"],
-
+      "@core/*": ["core/*"],
+      "@modules/*": ["modules/*"],
+      "@assets/*": ["assets/*"],
     }
   },
   "include": [

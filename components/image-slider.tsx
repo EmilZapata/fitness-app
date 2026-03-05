@@ -1,4 +1,4 @@
-import { SLIDER_IMAGES } from "@constants/index";
+import { SLIDER_IMAGES } from "@core/constants";
 import { Image } from "react-native";
 import Animated, {
   Easing,
