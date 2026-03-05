@@ -17,7 +17,7 @@ export default function Index() {
       <StatusBar barStyle="light-content" />
       <Image
         className="h-full w-full absolute"
-        source={require("../assets/images/welcome.png")}
+        source={require("../assets/images/welcome.webp")}
       />
       <LinearGradient
         colors={["transparent", "#18181b"]}

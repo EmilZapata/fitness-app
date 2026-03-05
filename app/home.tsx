@@ -29,7 +29,7 @@ export default function Home() {
         </View>
         <View className="flex justify-center items-center space-y-2">
           <Image
-            source={require("../assets/images/avatar.png")}
+            source={require("../assets/images/avatar.webp")}
             style={{ width: hp(6), height: hp(6) }}
             className="rounded-full"
           />
