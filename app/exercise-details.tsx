@@ -4,11 +4,13 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { Image } from "expo-image";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import Animated, { FadeInDown } from "react-native-reanimated";
 
 export default function ExerciseDetails() {
   const router = useRouter();
+  const { t } = useTranslation();
   const { item: itemJson } = useLocalSearchParams<{ item: string }>();
   const item: Exercise = JSON.parse(itemJson);
 
@@ -52,7 +54,7 @@ export default function ExerciseDetails() {
             style={{ fontSize: hp(2) }}
             className="text-neutral-700 tracking-wide"
           >
-            Equipment{" "}
+            {t("exerciseDetails.equipment")}{" "}
             <Text className="font-bold text-neutral-800">
               {item.equipments}
             </Text>
@@ -63,7 +65,7 @@ export default function ExerciseDetails() {
             style={{ fontSize: hp(2) }}
             className="text-neutral-700 tracking-wide"
           >
-            Secondary Muscles{" "}
+            {t("exerciseDetails.secondaryMuscles")}{" "}
             <Text className="font-bold text-neutral-800">
               {item.secondaryMuscles.join(", ")}
             </Text>
@@ -74,7 +76,7 @@ export default function ExerciseDetails() {
             style={{ fontSize: hp(2) }}
             className="text-neutral-700 tracking-wide"
           >
-            Target{" "}
+            {t("exerciseDetails.target")}{" "}
             <Text className="font-bold text-neutral-800">
               {item.targetMuscles}
             </Text>
@@ -85,7 +87,7 @@ export default function ExerciseDetails() {
             style={{ fontSize: hp(3) }}
             className="font-semibold text-neutral-800 tracking-wide"
           >
-            Instructions <Text className="font-bold text-neutral-800"></Text>
+            {t("exerciseDetails.instructions")}
           </Animated.Text>
           {item.instructions?.map((instruction, index) => (
             <Animated.Text

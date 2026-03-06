@@ -1,5 +1,6 @@
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
+import { useTranslation } from "react-i18next";
 import { Image, StatusBar, Text, TouchableOpacity, View } from "react-native";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import {
@@ -10,10 +11,10 @@ import "../global.css";
 
 export default function Index() {
   const router = useRouter();
+  const { t } = useTranslation();
 
   return (
     <View className="flex flex-1 justify-end">
-      {/* <Text className="color-slate-900">our first screen</Text> */}
       <StatusBar barStyle="light-content" />
       <Image
         className="h-full w-full absolute"
@@ -37,13 +38,14 @@ export default function Index() {
             style={{ fontSize: hp(5) }}
             className="text-white font-bold tracking-wide"
           >
-            Best <Text className="text-rose-500">Wroktouts</Text>
+            {t("welcome.title")}{" "}
+            <Text className="text-rose-500">{t("welcome.highlight")}</Text>
           </Text>
           <Text
             style={{ fontSize: hp(5) }}
             className="text-white font-bold tracking-wide"
           >
-            For you
+            {t("welcome.subtitle")}
           </Text>
         </Animated.View>
         <Animated.View entering={FadeInDown.delay(200).springify()}>
@@ -56,7 +58,7 @@ export default function Index() {
               style={{ fontSize: hp(3) }}
               className="text-white font-bold tracking-wide"
             >
-              Get Started
+              {t("welcome.cta")}
             </Text>
           </TouchableOpacity>
         </Animated.View>

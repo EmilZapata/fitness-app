@@ -5,11 +5,13 @@ import { hp, wp } from "@core/utils/percentage-screen";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { Image, StatusBar, Text, TouchableOpacity, View } from "react-native";
 import { ScrollView } from "react-native-virtualized-view";
 
 export default function Exercises() {
   const router = useRouter();
+  const { t } = useTranslation();
   const item = useLocalSearchParams<{ name: string; image: any }>();
   const hasParams = !!item.name;
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
@@ -51,7 +53,7 @@ export default function Exercises() {
           style={{ fontSize: hp(3) }}
           className="font-semibold text-neutral-700"
         >
-          {item?.name?.charAt(0).toUpperCase() + item?.name?.slice(1)} exercises
+          {t("exercises.title", { bodyPart: item?.name?.charAt(0).toUpperCase() + item?.name?.slice(1) })}
         </Text>
         <View className="mb-10">
           {isLoading ? (

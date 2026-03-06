@@ -3,18 +3,21 @@ import { hp, wp } from "@core/utils/percentage-screen";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
 import Animated, { FadeInDown } from "react-native-reanimated";
 
 export default function BodyParts() {
   const router = useRouter();
+  const { t } = useTranslation();
+
   return (
     <View className="mx-4">
       <Text
         style={{ fontSize: hp(3) }}
         className="font-semibold text-neutral-700"
       >
-        Exercises
+        {t("bodyParts.title")}
       </Text>
       <FlatList
         data={BODY_PARTS}

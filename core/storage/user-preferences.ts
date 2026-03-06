@@ -3,6 +3,7 @@ import { storage } from "./mmkv";
 const KEYS = {
   HAS_SEEN_ONBOARDING: "user.hasSeenOnboarding",
   LAST_BODY_PART: "user.lastBodyPart",
+  LANGUAGE: "user.language",
 } as const;
 
 export const userPreferences = {
@@ -20,5 +21,13 @@ export const userPreferences = {
 
   setLastBodyPart: (bodyPart: string): void => {
     storage.set(KEYS.LAST_BODY_PART, bodyPart);
+  },
+
+  getLanguage: (): string | null => {
+    return storage.getString(KEYS.LANGUAGE) ?? null;
+  },
+
+  setLanguage: (lang: string): void => {
+    storage.set(KEYS.LANGUAGE, lang);
   },
 };
