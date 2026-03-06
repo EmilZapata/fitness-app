@@ -20,7 +20,8 @@ export default function _layout() {
         <Stack.Screen
           name="exercise-details"
           options={{
-            presentation: "modal",
+            presentation: "transparentModal",
+            animation: "fade",
           }}
         />
       </Stack>

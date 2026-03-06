@@ -17,7 +17,7 @@ export const useApiBodyPart = (bodyPart: string) => {
       return allPages.length * EXERCISES_PAGE_LIMIT;
     },
     enabled: !!bodyPart,
-    staleTime: 1000 * 60 * 60, // 1 hour
+    staleTime: 1000 * 60 * 60 * 24, // 1 day
     select: (data) => data.pages.flatMap((page) => page.response ?? []),
   });
 };

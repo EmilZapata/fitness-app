@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import Animated, { FadeInDown } from "react-native-reanimated";
 
 interface ExerciseListProps {
   data: Exercise[];
@@ -58,7 +59,12 @@ const ExerciseCard = ({
   router: ReturnType<typeof useRouter>;
 }) => {
   return (
-    <View>
+    <Animated.View
+      entering={FadeInDown.duration(400)
+        .delay(index * 150)
+        .springify()
+        .damping(50)}
+    >
       <TouchableOpacity
         onPress={() =>
           router.push({
@@ -84,6 +90,6 @@ const ExerciseCard = ({
           {item.name.charAt(0).toUpperCase() + item.name.slice(1)}
         </Text>
       </TouchableOpacity>
-    </View>
+    </Animated.View>
   );
 };
