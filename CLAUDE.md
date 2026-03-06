@@ -24,6 +24,7 @@ TrackGym is a cross-platform fitness tracking app built with Expo (React Native)
 - **TanStack React Query** - server state management with `useInfiniteQuery` for pagination
 - **Axios** - HTTP client with centralized instance
 - **NativeWind** - Tailwind CSS for React Native styling
+- **react-native-mmkv** - synchronous key-value storage (query cache persistence + user preferences)
 - **Jest + jest-expo** - testing
 
 ## Architecture
@@ -31,7 +32,7 @@ TrackGym is a cross-platform fitness tracking app built with Expo (React Native)
 ### Routing (Expo Router)
 
 Routes are defined by the file structure in `app/`:
-- `app/_layout.tsx` - Root layout: wraps app with `QueryClientProvider` + `Stack` navigator
+- `app/_layout.tsx` - Root layout: wraps app with `PersistQueryClientProvider` (MMKV-backed) + `Stack` navigator
 - `app/index.tsx` - Welcome/landing screen
 - `app/home.tsx` - Home screen with image slider carousel and body parts grid
 - `app/exercises.tsx` - Exercise list by body part with infinite scroll (fullScreenModal)
@@ -47,11 +48,19 @@ Navigation flow: `index → home → exercises → exercise-details`
 
 ### Server State (TanStack React Query)
 
-- `QueryClient` is created and provided in `app/_layout.tsx`
+- `QueryClient` is created and provided in `app/_layout.tsx` with MMKV-backed persistence via `PersistQueryClientProvider`
 - API hooks live in `core/hooks/api/` mirroring the API structure
 - Uses `useInfiniteQuery` for paginated endpoints with offset-based pagination
 - The `select` option flattens pages into a single array for consumers
 - `getNextPageParam` returns `undefined` when last page has fewer items than the limit
+
+### Local Storage (MMKV)
+
+- `core/storage/mmkv.ts` - Two MMKV instances: `storage` (user preferences) and `queryStorage` (React Query cache)
+- `core/storage/client-storage.ts` - Adapter bridging MMKV to TanStack's `SyncStorage` interface
+- `core/storage/user-preferences.ts` - Typed accessor API for user preferences (onboarding, last body part, etc.)
+- New queries are automatically persisted — no extra config needed per endpoint
+- See `docs/{en,es}/mmkv-storage.md` for full guide on adding preferences and endpoints
 
 ### Passing Data Between Screens
 
@@ -85,6 +94,7 @@ All env vars use `EXPO_PUBLIC_` prefix. Defined in `.env` and re-exported from `
 Full documentation available in `docs/` directory in both English (`docs/en/`) and Spanish (`docs/es/`):
 - Architecture details: `docs/{en,es}/architecture.md`
 - Android APK build guide: `docs/{en,es}/android-build.md`
+- MMKV storage guide: `docs/{en,es}/mmkv-storage.md`
 
 ## Commit Conventions
 

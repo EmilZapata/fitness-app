@@ -1,11 +1,28 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
+import { QueryClient } from "@tanstack/react-query";
+import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { Stack } from "expo-router";
 
-const queryClient = new QueryClient();
+import { clientStorage } from "@core/storage";
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      gcTime: 1000 * 60 * 60 * 24, // 24 hours
+    },
+  },
+});
+
+const persister = createSyncStoragePersister({
+  storage: clientStorage,
+});
 
 export default function _layout() {
   return (
-    <QueryClientProvider client={queryClient}>
+    <PersistQueryClientProvider
+      client={queryClient}
+      persistOptions={{ persister, maxAge: 1000 * 60 * 60 * 24 }}
+    >
       <Stack
         screenOptions={{
           headerShown: false,
@@ -25,6 +42,6 @@ export default function _layout() {
           }}
         />
       </Stack>
-    </QueryClientProvider>
+    </PersistQueryClientProvider>
   );
 }
